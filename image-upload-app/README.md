@@ -1,12 +1,61 @@
-# React + Vite
+# Image Upload App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este projeto foi criado com React e Vite para demonstrar o upload de imagens via drag and drop.
 
-Currently, two official plugins are available:
+## Como o projeto foi criado
+- Inicialização com Vite e React.
+- Estrutura principal em `App.jsx`.
+- Estilização básica em `App.css` e `index.css`.
+- Upload de imagens implementado com `react-dropzone`.
+- Configuração do Vite para desenvolvimento e build.
+- Inclusão de SVGs para identidade visual.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Como rodar o projeto localmente
+1. **Instale as dependências:**
+   ```bash
+   npm install
+   ```
+2. **Inicie o servidor de desenvolvimento:**
+   ```bash
+   npm run dev
+   ```
+3. Acesse `http://localhost:5173` no navegador.
 
-## Expanding the ESLint configuration
+## Como implementar upload para AWS S3
+1. **Crie um bucket S3 na AWS.**
+2. **Configure as credenciais de acesso (IAM).**
+3. **Instale o SDK da AWS:**
+   ```bash
+   npm install aws-sdk
+   ```
+4. **Exemplo de integração:**
+   ```js
+   import AWS from 'aws-sdk';
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+   AWS.config.update({
+     accessKeyId: 'SUA_ACCESS_KEY',
+     secretAccessKey: 'SUA_SECRET_KEY',
+     region: 'sua-regiao'
+   });
+
+   const s3 = new AWS.S3();
+
+   function uploadToS3(file) {
+     const params = {
+       Bucket: 'nome-do-bucket',
+       Key: file.name,
+       Body: file,
+       ContentType: file.type
+     };
+     return s3.upload(params).promise();
+   }
+   ```
+5. **Nunca exponha suas credenciais no frontend!**
+   - Use uma API backend para gerar URLs assinadas ou fazer o upload.
+
+## Referências
+- [Documentação AWS S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html)
+- [react-dropzone](https://react-dropzone.js.org/)
+- [Vite](https://vitejs.dev/)
+
+---
